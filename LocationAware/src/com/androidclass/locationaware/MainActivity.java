@@ -57,15 +57,16 @@ public class MainActivity extends Activity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
-		mClient.connect();
+		mClient.connect(); // Connect the location client
 	}
 
 	@Override
 	protected void onStop() {
+		// Stop location update
 		if (mClient.isConnected()) {
 			mClient.removeLocationUpdates(this);
 		}
-		mClient.disconnect();
+		mClient.disconnect(); // Disconnect the location client
 		super.onStop();
 	}
 
@@ -86,6 +87,7 @@ public class MainActivity extends Activity implements
 		Toast.makeText(this, "Connected", Toast.LENGTH_LONG).show();
 		mClient.requestLocationUpdates(mRequest, this);
 		
+		// Build a Geofence
 		Geofence fence = new Geofence.Builder()
 				.setRequestId("1")
 				.setCircularRegion(22.998881, 120.216082, 2000)
@@ -94,9 +96,12 @@ public class MainActivity extends Activity implements
 				.build();
 		mList.add(fence);
 		
+		// Create a Intent
 		Intent intent = new Intent(this, GeofenceIntentSerivce.class);
 		intent.setAction("GeofenceIntentSerivce");
+		// Create a PendingIntent service
 		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		// Send out the Geofence request
 		mClient.addGeofences(mList, pendingIntent, this);
 	}
 
@@ -115,6 +120,8 @@ public class MainActivity extends Activity implements
 		
 	}
 
+	// PendingIntent for receiving geofence events
+	// This is run in a different process/thread so we cannot update the UI here
     public static class GeofenceIntentSerivce extends IntentService {
 
 		public GeofenceIntentSerivce() {
