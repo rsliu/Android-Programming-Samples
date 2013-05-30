@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AutoCompletion" >
+    
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="53dp"
+        android:completionThreshold="1"
+        android:ems="10"
+        android:completionHint="Pick a color or type your own"
+        android:hint="@string/enter_color" />
+
+    <EditText
+        android:id="@+id/textInputType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textFiltered"
+        android:layout_below="@+id/textFiltered"
+        android:layout_marginTop="48dp"
+        android:ems="10"
+        android:inputType="textAutoCorrect" />
+
+    <EditText
+        android:id="@+id/textFiltered"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/multiAutoCompleteTextView"
+        android:layout_centerVertical="true"
+        android:ems="10"
+        android:hint="Enter two captital letters" />
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/multiAutoCompleteTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/autoCompleteTextView"
+        android:layout_below="@+id/autoCompleteTextView"
+        android:layout_marginTop="20dp"
+        android:completionHint="Pick a color or type your own"
+        android:completionThreshold="1"
+        android:ems="10"
+        android:hint="@string/enter_multi_colors"
+        android:lines="@integer/multi_lines" />
+
+</RelativeLayout>

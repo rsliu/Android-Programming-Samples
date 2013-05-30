@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DateAndTimeActivity" >
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/timePicker">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+		    <DatePicker
+		        android:id="@+id/datePicker"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentLeft="true"
+		        android:layout_alignParentTop="true"
+		        android:calendarViewShown="false" />
+		
+		    <DatePicker
+		        android:id="@+id/datePicker2"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_alignLeft="@+id/datePicker"
+		        android:layout_below="@+id/datePicker"
+		        android:layout_marginTop="10dp"
+		        android:spinnersShown="false" />
+		
+		    <TimePicker
+		        android:id="@+id/timePicker"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_below="@+id/datePicker2"
+		        android:layout_centerHorizontal="true"
+		        android:layout_marginTop="46dp" />            
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

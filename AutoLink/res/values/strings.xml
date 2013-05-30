@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AutoLinkSample</string>
+    <string name="sample_links">Tel: 608-215-6848\nWeb: http://www.ncku.edu.tw\nAddress: 9231 Waterside St., Middleton, WI</string>
+    <string name="menu_settings">Settings</string>
+
+</resources>

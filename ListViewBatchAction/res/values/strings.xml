@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ListViewBatchAction</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string-array name="fruits">
+        <item >Apple</item>
+        <item >Banana</item>
+        <item >Strawberry</item>
+        <item >Blueberry</item>
+    </string-array>
+
+</resources>

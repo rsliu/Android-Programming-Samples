@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="multi_lines">2</integer>
+    <color name="green">#0f0</color>
+</resources>
