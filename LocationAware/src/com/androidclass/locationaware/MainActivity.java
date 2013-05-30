@@ -163,7 +163,8 @@ public class MainActivity extends Activity implements
     	public static final String GEOFENCE_EVENTS = "com.androidclass.locationaware.GeofenceEvents";
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Toast.makeText(context, intent.getStringExtra("Location"), Toast.LENGTH_LONG).show();
+			String locationInfo = "Arraived at " + intent.getStringExtra("Location");
+			Toast.makeText(context, locationInfo, Toast.LENGTH_LONG).show();
 		}
     	
     }
