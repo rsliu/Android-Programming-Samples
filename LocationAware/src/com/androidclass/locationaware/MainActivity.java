@@ -19,7 +19,10 @@ import android.os.Message;
 import android.app.Activity;
 import android.app.IntentService;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.view.Menu;
 import android.widget.Toast;
 
@@ -52,6 +55,12 @@ public class MainActivity extends Activity implements
 		mRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 		mList = new ArrayList<Geofence>();
 		mHandler = new Handler();
+		
+		// Register the broadcast receiver
+		IntentFilter filter = new IntentFilter(GeofenceEventReceiver.GEOFENCE_EVENTS);
+		filter.addCategory(Intent.CATEGORY_DEFAULT);
+		GeofenceEventReceiver receiver = new GeofenceEventReceiver();
+		registerReceiver(receiver, filter);
 	}
 
 	@Override
@@ -96,10 +105,10 @@ public class MainActivity extends Activity implements
 				.build();
 		mList.add(fence);
 		
-		// Create a Intent
+		// Create a Intent to be sent to IntentService
 		Intent intent = new Intent(this, GeofenceIntentSerivce.class);
 		intent.setAction("GeofenceIntentSerivce");
-		// Create a PendingIntent service
+		// Start a PendingIntent service
 		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		// Send out the Geofence request
 		mClient.addGeofences(mList, pendingIntent, this);
@@ -135,11 +144,28 @@ public class MainActivity extends Activity implements
 
 				@Override
 				public void run() {
-					Toast.makeText(getApplicationContext(), "Arrived at NCKU!", Toast.LENGTH_LONG).show();
+					//Toast.makeText(getApplicationContext(), "Arrived at NCKU!", Toast.LENGTH_LONG).show();
+					// Broadcast the event back to the main thread
+					Intent intent = new Intent();
+					intent.setAction(GeofenceEventReceiver.GEOFENCE_EVENTS); // Specify the action, a.k.a. receivers
+					intent.addCategory(Intent.CATEGORY_DEFAULT);
+					intent.putExtra("Location", "NCKU");
+					sendBroadcast(intent);
 				}
 				
 			});
 		}
     	
     }
+    
+    // Broadcast receiver used to receive broadcast sent from the GeofenceIntentService
+    public class GeofenceEventReceiver extends BroadcastReceiver {
+    	public static final String GEOFENCE_EVENTS = "com.androidclass.locationaware.GeofenceEvents";
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Toast.makeText(context, intent.getStringExtra("Location"), Toast.LENGTH_LONG).show();
+		}
+    	
+    }
+    
 }

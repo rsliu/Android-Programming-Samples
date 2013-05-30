@@ -24,10 +24,11 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme" 
+        android:debuggable="true">
 		<meta-data
 		    android:name="com.google.android.maps.v2.API_KEY"
-		    android:value="AIzaSyBiTAuk9VwhonKaxvBc100fHwg-WVG-6Cc"/>  
+		    android:value="AIzaSyBYbIWRLxxeKQ1dQIGixxZhdDbuGDDxZxw"/>  
         <activity
             android:name="com.androidclass.locationaware.MainActivity"
             android:label="@string/app_name" >
