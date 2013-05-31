@@ -95,11 +95,21 @@ public class MainActivity extends Activity implements
 				.build();
 		mList.add(fence);
 		
+		/*
+		// Method 1: Using IntentService
 		// Create a Intent to be sent to IntentService
 		Intent intent = new Intent(this, GeofenceIntentSerivce.class);
 		intent.setAction("GeofenceIntentSerivce");
 		// Start a PendingIntent service
 		PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		*/
+		
+		// Method 2: Using Broadcast
+		Intent intent = new Intent();
+		intent.setAction(GeofenceEventReceiver.GEOFENCE_EVENTS); // Specify the action, a.k.a. receivers
+		intent.addCategory(Intent.CATEGORY_DEFAULT);
+		intent.putExtra("Location", "NCKU");
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		// Send out the Geofence request
 		mClient.addGeofences(mList, pendingIntent, this);
 	}
