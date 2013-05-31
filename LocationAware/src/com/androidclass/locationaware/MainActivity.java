@@ -34,15 +34,6 @@ public class MainActivity extends Activity implements
 	LocationClient mClient;
 	LocationRequest mRequest;
 	ArrayList<Geofence> mList;
-	Handler mHandler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			Toast.makeText(MainActivity.this, "Arrived at NCKU", Toast.LENGTH_LONG).show();
-			super.handleMessage(msg);
-		}
-		
-	};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +45,6 @@ public class MainActivity extends Activity implements
 		mRequest.setFastestInterval(5000);
 		mRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 		mList = new ArrayList<Geofence>();
-		mHandler = new Handler();
 		
 		// Register the broadcast receiver
 		IntentFilter filter = new IntentFilter(GeofenceEventReceiver.GEOFENCE_EVENTS);
