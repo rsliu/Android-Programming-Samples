@@ -15,9 +15,9 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>    
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>	
 	<permission
-	        android:name="com.androidclass.googlemap.permission.MAPS_RECEIVE"
+	        android:name="com.androidclass.locationupdates.permission.MAPS_RECEIVE"
 	        android:protectionLevel="signature"/>
-	<uses-permission android:name="com.androidclass.googlemap.permission.MAPS_RECEIVE"/>
+	<uses-permission android:name="com.androidclass.locationupdates.permission.MAPS_RECEIVE"/>
 	<uses-feature android:glEsVersion="0x00020000" android:required="true"/>
     
     <application
@@ -27,7 +27,7 @@
         android:theme="@style/AppTheme" >
 		<meta-data
 		    android:name="com.google.android.maps.v2.API_KEY"
-		    android:value="AIzaSyB_U3eXlglFvSiBQ4rMxdqnjo6CfMdN38I"/>          
+		    android:value="AIzaSyCUm8EqVlvn2BpnLh7FuIdJyFyZemwOptM"/>          
         <activity
             android:name="com.androidclass.locationupdates.MainActivity"
             android:label="@string/app_name" >

@@ -47,11 +47,12 @@ public class MainActivity extends Activity implements
         mLocationClient = new LocationClient(this, this, this);
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setInterval(10000); 
-        mLocationRequest.setFastestInterval(3000);
+        mLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setSmallestDisplacement(10);                                               
         mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);     
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.setMyLocationEnabled(true);
         
         // Open the shared preferences
         mPrefs = getSharedPreferences("SharedPreferences", this.MODE_PRIVATE);
@@ -165,7 +166,7 @@ public class MainActivity extends Activity implements
 	@Override
 	public void onLocationChanged(Location location) {
 		LatLng newLoc = new LatLng(location.getLatitude(), location.getLongitude());
-		CameraUpdate update = CameraUpdateFactory.newLatLngZoom(newLoc, 10);
+		CameraUpdate update = CameraUpdateFactory.newLatLngZoom(newLoc, 16);
 		mMap.animateCamera(update);
 		
 		Toast.makeText(this, newLoc.toString(), Toast.LENGTH_LONG).show();

@@ -34,6 +34,8 @@ public class MainActivity extends Activity implements
 	LocationClient mClient;
 	LocationRequest mRequest;
 	ArrayList<Geofence> mList;
+	GeofenceEventReceiver mReceiver;
+	IntentFilter mFilter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,16 +49,16 @@ public class MainActivity extends Activity implements
 		mList = new ArrayList<Geofence>();
 		
 		// Register the broadcast receiver
-		IntentFilter filter = new IntentFilter(GeofenceEventReceiver.GEOFENCE_EVENTS);
-		filter.addCategory(Intent.CATEGORY_DEFAULT);
-		GeofenceEventReceiver receiver = new GeofenceEventReceiver();
-		registerReceiver(receiver, filter);
+		mFilter = new IntentFilter(GeofenceEventReceiver.GEOFENCE_EVENTS);
+		mFilter.addCategory(Intent.CATEGORY_DEFAULT);
+		mReceiver = new GeofenceEventReceiver();
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 		mClient.connect(); // Connect the location client
+		registerReceiver(mReceiver, mFilter);
 	}
 
 	@Override
@@ -66,6 +68,7 @@ public class MainActivity extends Activity implements
 			mClient.removeLocationUpdates(this);
 		}
 		mClient.disconnect(); // Disconnect the location client
+		unregisterReceiver(mReceiver);
 		super.onStop();
 	}
 
