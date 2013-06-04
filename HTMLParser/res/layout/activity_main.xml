@@ -38,7 +38,7 @@
                 android:id="@+id/currentTemp"
                 android:layout_column="0"
                 android:layout_width="wrap_content"
-                android:text="33"
+                android:text="--"
                 android:textSize="60sp" />
 
             <LinearLayout
@@ -52,7 +52,7 @@
 				    android:layout_height="wrap_content"
 				    android:layout_alignTop="@+id/tableLayout1"
 				    android:layout_toRightOf="@+id/tableLayout1"
-				    android:text="33"
+				    android:text="--"
 				    android:textSize="30sp" />
 				
 				<TextView
@@ -61,7 +61,7 @@
 				    android:layout_height="wrap_content"
 				    android:layout_below="@+id/highTemp"
 				    android:layout_toRightOf="@+id/tableLayout1"
-				    android:text="28"
+				    android:text="--"
 				    android:textSize="30sp" />
             </LinearLayout>
         </TableRow>
