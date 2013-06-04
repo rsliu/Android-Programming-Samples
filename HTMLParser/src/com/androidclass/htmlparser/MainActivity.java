@@ -65,8 +65,6 @@ public class MainActivity extends Activity {
         lowTemp = (TextView) findViewById(R.id.lowTemp);
         imageView = (ImageView) findViewById(R.id.imageView);
         
-         
-        
         AsyncTask<Void, Void, Void> parseTask = new AsyncTask<Void, Void, Void>() {
         	String high;
         	String low;
