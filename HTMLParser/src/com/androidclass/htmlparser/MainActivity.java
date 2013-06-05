@@ -26,7 +26,67 @@ public class MainActivity extends Activity {
 	TextView highTemp;
 	TextView lowTemp;
 	ImageView imageView;
-	
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        
+        // Step 1: Get references to all the UI controls
+        currentTemp = (TextView) findViewById(R.id.currentTemp);
+        highTemp = (TextView) findViewById(R.id.highTemp);
+        lowTemp = (TextView) findViewById(R.id.lowTemp);
+        imageView = (ImageView) findViewById(R.id.imageView);
+        
+        // Step 2: Create a AsyncTask to load the HTML page and parse the contents
+        new AsyncTask<Void, Void, Void>() {
+        	String high;
+        	String low;
+        	String current;
+
+			@Override
+			protected void onPostExecute(Void result) {
+				// Step 2d: UI must be updated in onPostExecute()
+				currentTemp.setText(current);
+				highTemp.setText(high);
+				lowTemp.setText(low);
+				super.onPostExecute(result);
+			}
+
+			@Override
+			protected Void doInBackground(Void... arg0) {
+		        try {
+		        	// Step 2a: Get the HTML document
+					String url = "http://tw.news.yahoo.com/weather/%E8%87%BA%E7%81%A3/%E5%8F%B0%E5%8D%97%E5%B8%82/%E5%8F%B0%E5%8D%97%E5%B8%82-2306182/";
+					Document doc = Jsoup.connect(url).get();
+					
+					// Step 2b: Get the image URL
+					Element element = doc.select("#obs-current-weather").first();
+					String attr = element.attr("style");
+					String[] parse = attr.split("'");
+					String imageUrl = parse[1];
+					
+					// Step 2c: Get current/high/low temperatures
+					element = element.select("div.day-temp-current.temp-c").first();
+					current = element.ownText();
+					element = element.select("div.day-high-low").first();
+					high = element.ownText();
+					element = element.select("span.day-temp-low").first();
+					low = element.ownText();
+					
+					// Step 3b: Start another task to download the image
+					mDownloadTask.execute(imageUrl);
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
+        }.execute();
+    }
+    
+    // Step 3a: Create another AsyncTask for downloading the image
 	AsyncTask<String, Void, Bitmap> mDownloadTask = new AsyncTask<String, Void, Bitmap>() {
 
 		@Override
@@ -53,65 +113,6 @@ public class MainActivity extends Activity {
 		}
     	
     };       
-	
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        
-        currentTemp = (TextView) findViewById(R.id.currentTemp);
-        highTemp = (TextView) findViewById(R.id.highTemp);
-        lowTemp = (TextView) findViewById(R.id.lowTemp);
-        imageView = (ImageView) findViewById(R.id.imageView);
-        
-        AsyncTask<Void, Void, Void> parseTask = new AsyncTask<Void, Void, Void>() {
-        	String high;
-        	String low;
-        	String current;
-        	Bitmap bitmap;
-
-			@Override
-			protected void onPostExecute(Void result) {
-				// UI must be updated in onPostExecute()
-				currentTemp.setText(current);
-				highTemp.setText(high);
-				lowTemp.setText(low);
-				super.onPostExecute(result);
-			}
-
-			@Override
-			protected Void doInBackground(Void... arg0) {
-		        try {
-		        	// Get the HTML document
-					String url = "http://tw.news.yahoo.com/weather/%E8%87%BA%E7%81%A3/%E5%8F%B0%E5%8D%97%E5%B8%82/%E5%8F%B0%E5%8D%97%E5%B8%82-2306182/";
-					Document doc = Jsoup.connect(url).get();
-					
-					// Get the weather image
-					Element element = doc.select("#obs-current-weather").first();
-					String attr = element.attr("style");
-					String[] parse = attr.split("'");
-					String imageUrl = parse[1];
-					// Start another task to download the image
-					mDownloadTask.execute(imageUrl);
-					
-					// Get current/high/low temperatures
-					element = doc.select("div.day-temp-current.temp-c").first();
-					current = element.ownText();
-					element = element.select("div.day-high-low").first();
-					high = element.ownText();
-					element = element.select("span.day-temp-low").first();
-					low = element.ownText();
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				return null;
-			}
-        }.execute();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

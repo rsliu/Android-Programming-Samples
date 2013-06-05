@@ -41,21 +41,24 @@ public class MainActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		// Step 1: Get references to UI controls
 		mHandler = new Handler();
 		mListView = (ListView) findViewById(R.id.listView);
 		mEditText = (EditText) findViewById(R.id.editText);
 		mButton = (Button) findViewById(R.id.btnSend);
-		mButton.setOnClickListener(this);
 		
+		// Step 2: Create objects needed by the ListView
 		mList = new ArrayList<String>();
 		mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 		mListView.setAdapter(mAdapter);
 		
-		AsyncTask<Void, Void, Void> connTask = new AsyncTask<Void, Void, Void>() {
-			@Override
-			protected Void doInBackground(Void... params) {
+		// Step 3: Create a asynchronous task to establish the internet connection
+		AsyncTask<String, Void, Void> connTask = new AsyncTask<String, Void, Void>() {
+			// Step 3a: Establish the connection
+			@Override			
+			protected Void doInBackground(String... urls) {
 				try {
-					InetAddress addr = InetAddress.getByName("140.116.53.118");
+					InetAddress addr = InetAddress.getByName(urls[0]);
 					mSocket = new Socket(addr, 8888);
 				} catch (UnknownHostException e) {
 					e.printStackTrace();
@@ -66,6 +69,8 @@ public class MainActivity extends Activity implements OnClickListener {
 				return null;
 			}
 
+			// Step 3b: Create reader and writer objects and start a thread in the background
+			// listening for incoming messages
 			@Override
 			protected void onPostExecute(Void result) {
 				try {
@@ -76,8 +81,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					
 					// Create a thread listening to incoming messages
 					mThread = new Thread(new Runnable() {
-						String in;
-						
+						String in;			
 						@Override
 						public void run() {
 							try {
@@ -107,9 +111,13 @@ public class MainActivity extends Activity implements OnClickListener {
 				super.onPostExecute(result);
 			}
 			
-		}.execute();
+		}.execute("140.116.53.118");
+		
+		// Step 4a: Setup OnClickListener for the button
+		mButton.setOnClickListener(this);
 	}
 
+	// Step 5: Close the internet connection onDestroy()
 	@Override
 	protected void onDestroy() {
 		try {
@@ -127,6 +135,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		return true;
 	}
 
+	// Step 4b: Send out the message and clear the textbox
 	@Override
 	public void onClick(View arg0) {
 		String text = mEditText.getText().toString() + "\r\n";

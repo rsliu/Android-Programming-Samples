@@ -31,7 +31,11 @@ public class MainActivity extends Activity {
         mImageView = (ImageView) findViewById(R.id.imageView);
         
         
-        // Method 1: Using a AsyncTask
+        // Method 1: Using a AsyncTask: AsyncTask is designed to be a helper class around 
+        // Thread and Handler and does not constitute a generic threading framework.
+        // AsyncTasks should ideally be used for short operations (a few seconds at the most.) 
+        // If you need to keep threads running for long periods of time, it is highly recommended 
+        // you use the various APIs provided by the java.util.concurrent pacakge
         /*AsyncTask<String, Void, Bitmap> downloadTask = new AsyncTask<String, Void, Bitmap>() {
 
 			@Override
@@ -72,7 +76,9 @@ public class MainActivity extends Activity {
 					InputStream is = conn.getInputStream();
 					mBitmap = BitmapFactory.decodeStream(is);
 					
-					// Notify the UI thread to update the UI
+					// Thread cannot update the UI directly, so
+					// notify the UI thread to perform the update via
+					// the handler
 					mHandler.post(new Runnable() {
 						@Override
 						public void run() {
