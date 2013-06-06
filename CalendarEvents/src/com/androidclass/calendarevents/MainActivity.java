@@ -1,10 +1,7 @@
 package com.androidclass.calendarevents;
 
-import java.util.Calendar;
-
 import android.os.Bundle;
 import android.provider.CalendarContract;
-import android.app.Activity;
 import android.app.ListActivity;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
@@ -13,8 +10,6 @@ import android.database.Cursor;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.SimpleCursorAdapter.ViewBinder;
