@@ -11,6 +11,7 @@ import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Bundle;
+import android.os.Handler;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements ActionListener, PeerListListener {
@@ -26,6 +28,8 @@ public class MainActivity extends Activity implements ActionListener, PeerListLi
 	WifiP2pBroadcastReceiver mReceiver;
 	IntentFilter mIntentFilter;
 	ArrayAdapter<String> mAdapter;
+	ListView mListView;
+	Handler mHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,9 @@ public class MainActivity extends Activity implements ActionListener, PeerListLi
 		
 		// Step 0: Setup objects needed for UI
 		mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+		mListView = (ListView) findViewById(R.id.listView);
+		mListView.setAdapter(mAdapter);
+		mHandler = new Handler();
 		
 		// Step 3: In your activity's onCreate() method, obtain an instance of WifiP2pManager 
 		//   and register your application with the Wi-Fi Direct framework by calling initialize(). 
@@ -113,6 +120,7 @@ public class MainActivity extends Activity implements ActionListener, PeerListLi
 					mManager.discoverPeers(mChannel, MainActivity.this);
 				} else {
 					// Wifi P2p is disabled
+					Toast.makeText(MainActivity.this, "Wifi P2p disabled.", Toast.LENGTH_LONG).show();
 				}
 			} 
 		}		
@@ -121,7 +129,15 @@ public class MainActivity extends Activity implements ActionListener, PeerListLi
 	// Step 6a: Discovering peers.
 	@Override
 	public void onFailure(int arg0) {
-		Toast.makeText(this, "Failed to detect peers.", Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "Failed to detect peers. Retrying...", Toast.LENGTH_SHORT).show();
+		mHandler.postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				mManager.discoverPeers(mChannel, MainActivity.this);
+			}
+			
+		},5000);
 	}
 
 	@Override
