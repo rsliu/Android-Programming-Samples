@@ -110,6 +110,7 @@ public class MainActivity extends Activity implements ActionListener, PeerListLi
 				int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
 				if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
 					// Wifi P2p is enabled
+					mManager.discoverPeers(mChannel, MainActivity.this);
 				} else {
 					// Wifi P2p is disabled
 				}
