@@ -1,17 +1,12 @@
 package com.androidclass.chatclient;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,7 +24,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	ListView mListView;
 	EditText mEditText;
 	Button mButton;
-	ArrayList<String> mList;
 	Socket mSocket;
 	PrintStream mWriter;
 	BufferedReader mReader;
@@ -47,47 +41,33 @@ public class MainActivity extends Activity implements OnClickListener {
 		mEditText = (EditText) findViewById(R.id.editText);
 		mButton = (Button) findViewById(R.id.btnSend);
 		
-		// Step 2: Create objects needed by the ListView
-		mList = new ArrayList<String>();
+		// Step 2: Setup adapter
 		mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 		mListView.setAdapter(mAdapter);
 		
 		// Step 3: Create a asynchronous task to establish the internet connection
-		AsyncTask<String, Void, Void> connTask = new AsyncTask<String, Void, Void>() {
+		new AsyncTask<String, Void, Void>() {
 			// Step 3a: Establish the connection
 			@Override			
 			protected Void doInBackground(String... urls) {
 				try {
 					InetAddress addr = InetAddress.getByName(urls[0]);
 					mSocket = new Socket(addr, 8888);
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
-				return null;
-			}
-
-			// Step 3b: Create reader and writer objects and start a thread in the background
-			// listening for incoming messages
-			@Override
-			protected void onPostExecute(Void result) {
-				try {
+					
 					// Create writer and reader
 					mWriter = new PrintStream(mSocket.getOutputStream());
 					mReader = new BufferedReader(
 							new InputStreamReader(mSocket.getInputStream()));
 					
-					// Create a thread listening to incoming messages
+					// Create a thread running in the background to receive incoming messages
 					mThread = new Thread(new Runnable() {
 						String in;			
 						@Override
 						public void run() {
 							try {
+								// Keeps listening incoming messages
 								while((in = mReader.readLine()) != null) {
-									// Send a runnable object to the UI thread 
-									// for updating the list view
+									// Send a runnable object to the UI thread for updating the list view
 									mHandler.post(new Runnable() {
 										@Override
 										public void run() {
@@ -95,7 +75,6 @@ public class MainActivity extends Activity implements OnClickListener {
 											mAdapter.notifyDataSetChanged();
 											mListView.setSelection(mListView.getCount() - 1);
 										}
-										
 									});
 								}
 							} catch (IOException e) {
@@ -104,13 +83,14 @@ public class MainActivity extends Activity implements OnClickListener {
 						}
 						
 					});
-					mThread.start();
+					mThread.start();					
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
-				}
-				super.onPostExecute(result);
+				}	
+				return null;
 			}
-			
 		}.execute("140.116.53.118");
 		
 		// Step 4a: Setup OnClickListener for the button
@@ -121,7 +101,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onDestroy() {
 		try {
-			mSocket.close();	// Close the socket
+			// Close the socket
+			mSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -135,7 +116,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		return true;
 	}
 
-	// Step 4b: Send out the message and clear the textbox
+	// Step 4b: Send out the message and clear the EditBox
 	@Override
 	public void onClick(View arg0) {
 		String text = mEditText.getText().toString() + "\r\n";
