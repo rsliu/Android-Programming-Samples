@@ -53,8 +53,15 @@ public class MainActivity extends Activity implements OnClickListener {
 					InetAddress addr = InetAddress.getByName(urls[0]);
 					mSocket = new Socket(addr, 8888);
 					
-					// Create writer and reader
+					// Create PrintStream:
+					// Wraps an existing OutputStream and provides convenience methods 
+					// for writing common data types in a human readable format					
 					mWriter = new PrintStream(mSocket.getOutputStream());
+					
+					// Create BufferedReader: Wraps an existing Reader and buffers the input
+					// InputStreamReader: A class for turning a byte stream into a character 
+					// stream. Data read from the source input stream is converted into 
+					// characters by either a default or a provided character converter
 					mReader = new BufferedReader(
 							new InputStreamReader(mSocket.getInputStream()));
 					
