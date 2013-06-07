@@ -27,7 +27,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	Socket mSocket;
 	PrintStream mWriter;
 	BufferedReader mReader;
-	Thread mThread;
 	Handler mHandler;
 	
 	@Override
@@ -60,7 +59,7 @@ public class MainActivity extends Activity implements OnClickListener {
 							new InputStreamReader(mSocket.getInputStream()));
 					
 					// Create a thread running in the background to receive incoming messages
-					mThread = new Thread(new Runnable() {
+					new Thread(new Runnable() {
 						String in;			
 						@Override
 						public void run() {
@@ -80,10 +79,8 @@ public class MainActivity extends Activity implements OnClickListener {
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
-						}
-						
-					});
-					mThread.start();					
+						}			
+					}).start();					
 				} catch (UnknownHostException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
