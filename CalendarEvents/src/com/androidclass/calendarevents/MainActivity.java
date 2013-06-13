@@ -32,7 +32,6 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
         };
 	
 	SimpleCursorAdapter mAdapter; // This is the Adapter being used to display the list's data.
-	Cursor mCursor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
