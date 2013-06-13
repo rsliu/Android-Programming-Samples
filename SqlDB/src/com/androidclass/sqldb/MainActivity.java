@@ -1,12 +1,17 @@
 package com.androidclass.sqldb;
 
+import java.io.File;
+
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.provider.CalendarContract;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,7 +19,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.view.Menu;
 import android.widget.SimpleCursorAdapter;
 
-public class MainActivity extends ListActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class MainActivity extends ListActivity {
 	
 
 	// Step 1: Create a helper class to manage database creation and version management
@@ -67,11 +72,14 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 	// Step 2: To access your database, instantiate your subclass of SQLiteOpenHelper
 	DBHelper mDbHelper = new DBHelper(this);
 	SQLiteDatabase mDb;
-
+	
+	Cursor mCursor;
+	SimpleCursorAdapter mAdapter; // This is the Adapter being used to display the list's data.
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		//setContentView(R.layout.activity_main);
 		
 		// Step 3: Create and/or open a database that will be used for reading and writing.
 		mDb = mDbHelper.getWritableDatabase();
@@ -87,7 +95,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		// NULL in the event that the ContentValues is empty (if you instead set 
 		// this to "null", then the framework will not insert a row when there 
 		// are no values)
-		mDb.insert(DBHelper.DBEntry.TABLE_NAME, null, values);
+		/*mDb.insert(DBHelper.DBEntry.TABLE_NAME, null, values);
 		
 		values.put(DBHelper.DBEntry._ID, 2);
 		values.put(DBHelper.DBEntry.COLUMN_NAME_RESTAURANT_NAME, "Golden Sushi");
@@ -97,9 +105,9 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		values.put(DBHelper.DBEntry._ID, 3);
 		values.put(DBHelper.DBEntry.COLUMN_NAME_RESTAURANT_NAME, "Spicy Kimchi");
 		values.put(DBHelper.DBEntry.COLUMN_NAME_FOOD_TYPE, "Korean");
-		mDb.insert(DBHelper.DBEntry.TABLE_NAME, null, values);
+		mDb.insert(DBHelper.DBEntry.TABLE_NAME, null, values);*/
 		
-		// Step 5a: Read information from a database. To read from a database, use 
+		// Step 5a: Read information from a database. To read from a database, create a cursor and use 
 		//   the query() method, passing it your selection criteria and desired columns
 		//   Define a projection that specifies which columns from the database you
 		//   will actually use after this query
@@ -108,7 +116,18 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 				DBHelper.DBEntry.COLUMN_NAME_RESTAURANT_NAME,
 				DBHelper.DBEntry.COLUMN_NAME_FOOD_TYPE };
 		
-		// Step 5b: Create the adapter require API level 11
+		// Step 5b: Create the cursor
+		mCursor = mDb.query(
+				DBHelper.DBEntry.TABLE_NAME,  // The table to query
+			    projection,                     // The columns to return
+			    null,                           // The columns for the WHERE clause
+			    null,                           // The values for the WHERE clause
+			    null,                           // don't group the rows
+			    null,                           // don't filter by row groups
+			    null                            // The sort order
+			    );
+		
+		// Step 5c: Create the adapter require API level 11
 		String[] columns = {
 				DBHelper.DBEntry.COLUMN_NAME_RESTAURANT_NAME,
 				DBHelper.DBEntry.COLUMN_NAME_FOOD_TYPE				
@@ -122,14 +141,12 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		mAdapter = new SimpleCursorAdapter(
 				this,											// Context
 				android.R.layout.simple_expandable_list_item_2,	// Layout
-				null,											// Initially use a null cursor
+				mCursor,											// Initially use a null cursor
 				columns,										// Columns to display
 				view_ids,										// Views used to display the columns
 				0);
 		
-		setListAdapter(mAdapter); // Bind the adapter to the list view		
+		setListAdapter(mAdapter); // Bind the adapter to the list view	
+		
 	}
-	
-	// Step 5d: Create cursor and adapter
-	SimpleCursorAdapter mAdapter; // This is the Adapter being used to display the list's data.
 }
