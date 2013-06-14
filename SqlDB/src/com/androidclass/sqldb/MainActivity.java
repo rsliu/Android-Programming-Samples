@@ -1,22 +1,13 @@
 package com.androidclass.sqldb;
 
-import java.io.File;
-
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import android.provider.CalendarContract;
-import android.app.Activity;
 import android.app.ListActivity;
-import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.view.Menu;
 import android.widget.SimpleCursorAdapter;
 
 public class MainActivity extends ListActivity {
@@ -95,7 +86,7 @@ public class MainActivity extends ListActivity {
 		// NULL in the event that the ContentValues is empty (if you instead set 
 		// this to "null", then the framework will not insert a row when there 
 		// are no values)
-		/*mDb.insert(DBHelper.DBEntry.TABLE_NAME, null, values);
+		mDb.insert(DBHelper.DBEntry.TABLE_NAME, null, values);
 		
 		values.put(DBHelper.DBEntry._ID, 2);
 		values.put(DBHelper.DBEntry.COLUMN_NAME_RESTAURANT_NAME, "Golden Sushi");
@@ -105,7 +96,7 @@ public class MainActivity extends ListActivity {
 		values.put(DBHelper.DBEntry._ID, 3);
 		values.put(DBHelper.DBEntry.COLUMN_NAME_RESTAURANT_NAME, "Spicy Kimchi");
 		values.put(DBHelper.DBEntry.COLUMN_NAME_FOOD_TYPE, "Korean");
-		mDb.insert(DBHelper.DBEntry.TABLE_NAME, null, values);*/
+		mDb.insert(DBHelper.DBEntry.TABLE_NAME, null, values);
 		
 		// Step 5a: Read information from a database. To read from a database, create a cursor and use 
 		//   the query() method, passing it your selection criteria and desired columns
