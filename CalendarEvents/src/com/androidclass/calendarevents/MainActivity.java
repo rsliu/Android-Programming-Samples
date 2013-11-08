@@ -41,10 +41,16 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
     		CalendarContract.Events._ID,
         	CalendarContract.Events.TITLE,
         	CalendarContract.Events.DTSTART
+    };
+    
+    final String[] CALENDAR_PROJECTIONS = new String[] {
+        	CalendarContract.Calendars._ID,
+        	CalendarContract.Calendars.ACCOUNT_NAME,
+        	CalendarContract.Calendars.ACCOUNT_TYPE
         };
 	
 	SimpleCursorAdapter mAdapter; // This is the Adapter being used to display the list's data.
-	long mEventId;
+	long mCalendarID;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +93,23 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		
 		// Setup action bar
 		ActionBar actionBar = this.getActionBar();
+		
+		// Run query to find out the ID of Google Calendar Event Table
+		// Better done using a AsyncTask
+		Cursor cur = null;
+		ContentResolver cr = getContentResolver();
+		Uri uri = CalendarContract.Calendars.CONTENT_URI;   
+		String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND (" 
+		                        + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?))";
+		String[] selectionArgs = new String[] {"renshiou.liu@gmail.com", "com.google"}; 
+		// Submit the query and get a Cursor object back. 
+		cur = cr.query(uri, CALENDAR_PROJECTIONS, selection, selectionArgs, null);
+		
+		mCalendarID = 1;
+		while (cur.moveToNext()) {		      
+		    // Get the field values
+		    mCalendarID = cur.getLong(0);
+		}
 	}
 
 	@Override
@@ -108,15 +131,15 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 			
 		    ContentResolver contentResolver = this.getContentResolver();
 		    ContentValues values = new ContentValues();
-		    values.put(Events.CALENDAR_ID, 1); 							
-		    values.put(Events.TITLE, "Meeting");
+		    values.put(Events.CALENDAR_ID, mCalendarID); 							
+		    values.put(Events.TITLE, "Progress check");
 		    values.put(Events.AVAILABILITY, Events.AVAILABILITY_BUSY);
 		    values.put(Events.EVENT_LOCATION, "Office");
 		    values.put(Events.DESCRIPTION, "Report progress and debug");
 		    values.put(Events.DTSTART, beginTime.getTimeInMillis());
 		    values.put(Events.DTEND, endTime.getTimeInMillis());
 		    values.put(Events.EVENT_TIMEZONE, "Asia/Taipei");			// Time zone must be set
-		    Uri uri = contentResolver.insert(Events.CONTENT_URI, values);			    
+		    Uri uri = contentResolver.insert(Events.CONTENT_URI, values);			
 			
 		    // Alternatively, you can also add the event through the Calendar App.
 		    // But this would require user interaction
