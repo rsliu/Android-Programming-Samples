@@ -101,7 +101,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		Uri uri = CalendarContract.Calendars.CONTENT_URI;   
 		String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND (" 
 		                        + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?))";
-		String[] selectionArgs = new String[] {"renshiou.liu@gmail.com", "com.google"}; 
+		String[] selectionArgs = new String[] {"you.google.account@gmail.com", "com.google"}; 	// Replace with your own email address
 		// Submit the query and get a Cursor object back. 
 		cur = cr.query(uri, CALENDAR_PROJECTIONS, selection, selectionArgs, null);
 		
