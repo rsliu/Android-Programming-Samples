@@ -5,10 +5,13 @@ import java.util.List;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
 
+import android.app.AlertDialog;
 import android.app.IntentService;
+import android.app.AlertDialog.Builder;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -60,11 +63,12 @@ public class GeofenceIntentService extends IntentService {
 	                    triggerIds[i] = triggerList.get(i).getRequestId();
 	                }
                 }
-                /*
-                 * At this point, you can store the IDs for further use
-                 * display them, or display the details associated with
-                 * them.
-                 */
+
+                // Send location updates
+                Intent locationUpdate = new Intent(MainActivity.LOCATION_UPDATE);
+                locationUpdate.putExtra("EnteringLocations", triggerIds);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(locationUpdate);
+                
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
 					@Override

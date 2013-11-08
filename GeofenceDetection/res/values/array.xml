@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="locations">
+        <item >National Cheng Kung University</item>
+        <item >Da-Tung Night Market</item>
+    </string-array>
+    <string-array name="latitudes">
+        <item >22.998881</item>
+        <item >22.963451</item>
+    </string-array>
+    <string-array name="longitudes">
+        <item >120.216082</item>
+        <item >120.238152</item>
+    </string-array>
+    
+</resources>

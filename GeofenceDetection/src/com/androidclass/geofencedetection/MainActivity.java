@@ -23,8 +23,14 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.app.AlertDialog.Builder;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,8 +45,6 @@ public class MainActivity extends Activity implements
 	
 	LocationClient mLocationClient;
 	
-    // Internal geofence objects
-    SimpleGeofence mGeofence;	
     // Persistent storage for geofences
     SimpleGeofenceStore mGeofenceStorage;
 	// Internal List of Geofence objects
@@ -51,14 +55,52 @@ public class MainActivity extends Activity implements
     GoogleMap mMap;
     // LocationManager
     LocationManager mManager;
+    // Intent receiver
+    BroadcastReceiver mReceiver;
+    public static final String LOCATION_UPDATE = "com.androidclass.geofencedetection";
+    // Dialog builder
+    Builder mBuilder;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mLocationClient = new LocationClient(this, this, this);
-		mLocationClient.connect();
+		mLocationClient.connect();				
+		mBuilder = new AlertDialog.Builder(this);
 		createGeofences();
+		
+		
+		// Setup broadcast receiver so that we can get notified when user's location is changed
+		mReceiver = new BroadcastReceiver() {
+
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				String[] enteringLocations;
+				String locationInfo = "You've arriver: ";
+				
+				enteringLocations = intent.getStringArrayExtra("EnteringLocations");
+				for(String location : enteringLocations) {
+					locationInfo = locationInfo + " " + location + ",";
+				}
+								
+				// Removing the last ","
+				locationInfo = locationInfo.substring(0, locationInfo.length()-1);				
+				
+				// Setup title and message. You can choose to use either a string resource or 
+				// a character string
+				mBuilder.setTitle("Location Update"); // String resource (passed in)
+				mBuilder.setMessage(locationInfo.substring(0, locationInfo.length()-1)); // Character string
+				
+				// Finally, create the dialog
+				mBuilder.create().show();				
+			}			
+		};
+		
+		LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(this);
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(LOCATION_UPDATE);
+		bManager.registerReceiver(mReceiver, intentFilter);					
 		
 		// Move camera to Taipei 101
 		mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
@@ -86,21 +128,29 @@ public class MainActivity extends Activity implements
      * and add them to a List.
      */
     public void createGeofences() {
+    	// Get locations info
+        String[] locations = getResources().getStringArray(R.array.locations);
+        String[] latitudes = getResources().getStringArray(R.array.latitudes);
+        String[] longitudes = getResources().getStringArray(R.array.longitudes);
+
 		// Instantiate a new geofence storage area
         mGeofenceStorage = new SimpleGeofenceStore(this);
         // Instantiate the current List of geofences
         mGeofenceList = new ArrayList<Geofence>();
-        // Instantiate a SimpleGeofence object
-        mGeofence = new SimpleGeofence(
-                "1",						// Geofence ID
-                22.998881,					// Latitude
-                120.216082,					// Longitude
-                50000,						// Radius
-                Geofence.NEVER_EXPIRE,	    // Expiration time in milliseconds
-                Geofence.GEOFENCE_TRANSITION_ENTER); // Records only entry transitions
-        // Store this flat version
-        mGeofenceStorage.setGeofence("1", mGeofence);
-        mGeofenceList.add(mGeofence.toGeofence());
+        
+        // Create SimpleGeofence objects
+        for (int i = 0; i < locations.length; i++) {
+        	SimpleGeofence geofence = new SimpleGeofence(
+	                locations[i],						// Geofence ID
+	                Float.valueOf(latitudes[i]),		// Latitude
+	                Float.valueOf(longitudes[i]),		// Longitude
+	                1000,								// Radius
+	                Geofence.NEVER_EXPIRE,	    		// Expiration time in milliseconds
+	                Geofence.GEOFENCE_TRANSITION_ENTER); // Records only entry transitions
+	        // Store this flat version
+	        mGeofenceStorage.setGeofence(locations[i], geofence);        
+	        mGeofenceList.add(geofence.toGeofence());
+        }
     }
 
 	@Override
