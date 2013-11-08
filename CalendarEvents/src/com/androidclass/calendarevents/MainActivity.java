@@ -1,14 +1,26 @@
 package com.androidclass.calendarevents;
 
+import java.util.Calendar;
+import java.util.TimeZone;
+
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
+import android.app.ActionBar;
 import android.app.ListActivity;
 import android.app.LoaderManager;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.format.DateFormat;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -32,6 +44,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
         };
 	
 	SimpleCursorAdapter mAdapter; // This is the Adapter being used to display the list's data.
+	long mEventId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +73,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 					return true;
 				}
 				return false;
-			}
-			
+			}									
 		});
 		
 		setListAdapter(mAdapter);
@@ -72,12 +84,54 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 				null,	// Optional arguments (Bundle) to supply to the loader at construction
 				this	// Interface the LoaderManager will call to report about changes in the state of the loader
 				);
+		
+		// Setup action bar
+		ActionBar actionBar = this.getActionBar();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+		case R.id.action_add:
+			// Add an event to the calendar. Better done in an AsyncTask or a thread
+			Calendar beginTime = Calendar.getInstance();
+			beginTime.set(2013, Calendar.NOVEMBER, 9, 9, 30);
+			Calendar endTime = Calendar.getInstance();
+			endTime.set(2013, Calendar.NOVEMBER, 9, 10, 30);
+			
+		    ContentResolver contentResolver = this.getContentResolver();
+		    ContentValues values = new ContentValues();
+		    values.put(Events.CALENDAR_ID, 1); 							
+		    values.put(Events.TITLE, "Meeting");
+		    values.put(Events.AVAILABILITY, Events.AVAILABILITY_BUSY);
+		    values.put(Events.EVENT_LOCATION, "Office");
+		    values.put(Events.DESCRIPTION, "Report progress and debug");
+		    values.put(Events.DTSTART, beginTime.getTimeInMillis());
+		    values.put(Events.DTEND, endTime.getTimeInMillis());
+		    values.put(Events.EVENT_TIMEZONE, "Asia/Taipei");			// Time zone must be set
+		    Uri uri = contentResolver.insert(Events.CONTENT_URI, values);			    
+			
+		    // Alternatively, you can also add the event through the Calendar App.
+		    // But this would require user interaction
+			/*Intent intent = new Intent(Intent.ACTION_INSERT)
+			    .setData(Events.CONTENT_URI)
+			    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
+			    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
+			    .putExtra(Events.TITLE, "Meeting")
+			    .putExtra(Events.DESCRIPTION, "Project meeting")
+			    .putExtra(Events.EVENT_LOCATION, "Professor's office")
+			    .putExtra(Events.AVAILABILITY, Events.AVAILABILITY_BUSY);
+			startActivity(intent);*/
+			
+			break;
+		}
 		return true;
 	}
 
