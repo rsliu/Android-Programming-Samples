@@ -67,15 +67,7 @@ public class GeofenceIntentService extends IntentService {
                 // Send location updates
                 Intent locationUpdate = new Intent(MainActivity.LOCATION_UPDATE);
                 locationUpdate.putExtra("EnteringLocations", triggerIds);
-                LocalBroadcastManager.getInstance(this).sendBroadcast(locationUpdate);
-                
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-					@Override
-					public void run() {
-						Toast.makeText(getBaseContext(), "Arrived at NCKU!", Toast.LENGTH_LONG).show();
-					}
-                });                
+                LocalBroadcastManager.getInstance(this).sendBroadcast(locationUpdate);                              
             } else {
             	// An invalid transition was reported
 	            Log.e("GeofenceIntentService",

@@ -12,12 +12,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -39,9 +38,9 @@ public class MainActivity extends Activity implements
 					ConnectionCallbacks,
 					OnConnectionFailedListener,
 					OnAddGeofencesResultListener, 
-					OnClickListener,
 					LocationListener{
 	
+	LocationManager mLocationManager;
 	LocationClient mLocationClient;
 	
     // Persistent storage for geofences
@@ -57,11 +56,15 @@ public class MainActivity extends Activity implements
     public static final String LOCATION_UPDATE = "com.androidclass.geofencedetection";
     // Dialog builder
     Builder mBuilder;
+    ArrayList<Location> mMockLocations;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		mMockLocations = new ArrayList<Location>();
+		mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 		mLocationClient = new LocationClient(this, this, this);
 		mLocationClient.connect();				
 		mBuilder = new AlertDialog.Builder(this);
@@ -87,13 +90,8 @@ public class MainActivity extends Activity implements
 		
 		// Move camera to Taipei 101
 		mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-		mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);		
-		
-		// Set button click listener
-		Button btn = (Button) findViewById(R.id.btnMarket);
-		btn.setOnClickListener(this);
-		btn = (Button) findViewById(R.id.btnNCKU);
-		btn.setOnClickListener(this);
+		mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);	
+		mMap.setMyLocationEnabled(true); // Display user's current location on the map
 	}
 	
 	@Override
@@ -130,6 +128,13 @@ public class MainActivity extends Activity implements
 	        // Store this flat version
 	        mGeofenceStorage.setGeofence(locations[i], geofence);        
 	        mGeofenceList.add(geofence.toGeofence());
+	        
+	        // Create mock location objects
+	        Location mockLocation = new Location("MY_PROVIDER");
+	        mockLocation.setLatitude(Float.valueOf(latitudes[i]));
+	        mockLocation.setLongitude(Float.valueOf(longitudes[i]));
+	        mockLocation.setAccuracy(3.0f);
+	        mMockLocations.add(mockLocation);
         }
     }
     
@@ -139,7 +144,8 @@ public class MainActivity extends Activity implements
     	String[] descriptions = getResources().getStringArray(R.array.descriptions);
     	int index = -1;
     	    	
-    	for (int i = 0; i < entringLocations.length; i++) {
+    	// Use the first triggered geofence as the current location
+    	for (int i = 0; i < locations.length; i++) {
     		if (locations[i].equals(entringLocations[0])) {
     			index = i;
     			break;
@@ -198,6 +204,10 @@ public class MainActivity extends Activity implements
         Intent intent = new Intent(this, GeofenceIntentService.class);
         intent.setAction("GeofenceIntentService");
         
+        // Enable mock location mode
+        mLocationClient.setMockMode(true);
+        mLocationClient.setMockLocation(mMockLocations.get(0));
+        
         // Create a PendingIntent
         mGeofencePendingIntent = PendingIntent.getService(
                 this,
@@ -211,37 +221,42 @@ public class MainActivity extends Activity implements
         
         // Request location update
         LocationRequest request = LocationRequest.create();
-        mLocationClient.requestLocationUpdates(request, (com.google.android.gms.location.LocationListener) this);
+        request.setInterval(60000); // update every 1 minute
+        request.setSmallestDisplacement(10.0f); // do not update unless the user moved more than 10 meters
+        mLocationClient.requestLocationUpdates(request, (LocationListener) this);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Location currentLocation;
+		int locationIndex = 0;
+		
+		switch(item.getItemId()) {
+		case R.id.loc_ncku:
+			locationIndex = 0;
+	    	break;
+		case R.id.loc_da_tung_market:
+			locationIndex = 1;
+			break;
+		}
+		
+		currentLocation = mMockLocations.get(locationIndex);
+		currentLocation.setTime(System.currentTimeMillis());
+		mLocationClient.setMockLocation(currentLocation);
+		
+		return true;		
 	}
 
 	@Override
 	public void onDisconnected() {
 		
 	}
-	
-	@Override
-	public void onClick(View view) {
-		Location location = new Location("MY_PROVIDER");  
-		
-		switch(view.getId()) {
-		case R.id.btnNCKU:
-	    	location.setLatitude(22.998881);
-	    	location.setLongitude(120.216082);
-	    	Toast.makeText(this, "NCKU!", Toast.LENGTH_SHORT).show();
-	    	break;
-		case R.id.btnMarket:
-	    	location.setLatitude(25.033498);
-	    	location.setLongitude(121.564096);
-	    	Toast.makeText(this, "Taipei 101!", Toast.LENGTH_SHORT).show(); 
-			break;
-		}				
-	}
 
 	@Override
 	public void onLocationChanged(Location location) {
 		// Move camera
 		LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());		
-		CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 15);
+		CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 16);
 		mMap.animateCamera(update);	
 	}
 }
