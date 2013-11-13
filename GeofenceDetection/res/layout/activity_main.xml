@@ -11,20 +11,20 @@
 	  android:layout_height="match_parent" />
 
 	<Button
-	    android:id="@+id/btnTaipei"
+	    android:id="@+id/btnMarket"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_alignParentBottom="true"
 	    android:layout_alignParentRight="true"
 	    android:layout_marginBottom="16dp"
-	    android:text="Taipei 101" />
+	    android:text="Da-Tung Night Market" />
 
 	<Button
 	    android:id="@+id/btnNCKU"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:layout_above="@+id/btnTaipei"
-	    android:layout_alignLeft="@+id/btnTaipei"
+	    android:layout_above="@+id/btnMarket"
+	    android:layout_alignLeft="@+id/btnMarket"
 	    android:text="NCKU" />
 
 </RelativeLayout>

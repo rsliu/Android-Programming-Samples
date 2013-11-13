@@ -12,5 +12,13 @@
         <item >120.216082</item>
         <item >120.238152</item>
     </string-array>
+    <string-array name="images">
+        <item >ncku</item>
+        <item >ncku</item>
+    </string-array>
+    <string-array name="descriptions">
+        <item >It is the number 1 university in southern Taiwan.</item>
+        <item >It is one of the most famous night markets in Tainan city.</item>
+    </string-array>
     
 </resources>
