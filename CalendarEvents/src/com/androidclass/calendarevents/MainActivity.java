@@ -17,6 +17,7 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.format.DateFormat;
 import android.view.Menu;
@@ -110,6 +111,10 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		    // Get the field values
 		    mCalendarID = cur.getLong(0);
 		}
+		
+		getListView().setBackgroundColor(getResources().getColor(R.color.White));
+		//getListView().setBackground(R.drawable.background);
+		getListView().setBackgroundResource(R.drawable.background);
 	}
 
 	@Override
