@@ -92,6 +92,7 @@ public class MainActivity extends Activity implements
 		mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 		mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);	
 		mMap.setMyLocationEnabled(true); // Display user's current location on the map
+		mMap.getUiSettings().setCompassEnabled(true); // Turn on compass
 	}
 	
 	@Override
