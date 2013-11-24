@@ -23,6 +23,8 @@ import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.SimpleCursorAdapter.ViewBinder;
@@ -52,6 +54,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 	
 	SimpleCursorAdapter mAdapter; // This is the Adapter being used to display the list's data.
 	long mCalendarID;
+	Animation animFadein;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +118,17 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		getListView().setBackgroundColor(getResources().getColor(R.color.White));
 		//getListView().setBackground(R.drawable.background);
 		getListView().setBackgroundResource(R.drawable.background);
+		
+		// Load the animation
+        animFadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+        animFadein.setDuration(5000);
+        getListView().setAnimation(animFadein);        
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		animFadein.start();
 	}
 
 	@Override
