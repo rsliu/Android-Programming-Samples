@@ -1,3 +1,8 @@
+int array descriptions 0x7f070004
+int array images 0x7f070003
+int array latitudes 0x7f070001
+int array locations 0x7f070000
+int array longitudes 0x7f070002
 int attr cameraBearing 0x7f010001
 int attr cameraTargetLat 0x7f010002
 int attr cameraTargetLng 0x7f010003
@@ -24,8 +29,8 @@ int color common_signin_btn_light_text_focused 0x7f040007
 int color common_signin_btn_light_text_pressed 0x7f040005
 int color common_signin_btn_text_dark 0x7f04000a
 int color common_signin_btn_text_light 0x7f04000b
-int dimen activity_horizontal_margin 0x7f070000
-int dimen activity_vertical_margin 0x7f070001
+int dimen activity_horizontal_margin 0x7f080000
+int dimen activity_vertical_margin 0x7f080001
 int drawable common_signin_btn_icon_dark 0x7f020000
 int drawable common_signin_btn_icon_disabled_dark 0x7f020001
 int drawable common_signin_btn_icon_disabled_focus_dark 0x7f020002
@@ -51,9 +56,10 @@ int drawable common_signin_btn_text_normal_light 0x7f020015
 int drawable common_signin_btn_text_pressed_dark 0x7f020016
 int drawable common_signin_btn_text_pressed_light 0x7f020017
 int drawable ic_launcher 0x7f020018
+int drawable ncku 0x7f020019
 int id action_settings 0x7f050008
+int id btnMarket 0x7f050006
 int id btnNCKU 0x7f050007
-int id btnTaipei 0x7f050006
 int id hybrid 0x7f050004
 int id map 0x7f050005
 int id none 0x7f050000
@@ -61,7 +67,7 @@ int id normal 0x7f050001
 int id satellite 0x7f050002
 int id terrain 0x7f050003
 int layout activity_main 0x7f030000
-int menu main 0x7f090000
+int menu main 0x7f0a0000
 int string action_settings 0x7f060016
 int string app_name 0x7f060015
 int string auth_client_availability_notification_title 0x7f06000f
@@ -86,8 +92,8 @@ int string hello_world 0x7f060017
 int string location_client_ulr_inactive_age_under_13 0x7f060012
 int string location_client_ulr_inactive_age_unknown 0x7f060013
 int string location_client_ulr_inactive_unknown_restriction 0x7f060014
-int style AppBaseTheme 0x7f080000
-int style AppTheme 0x7f080001
+int style AppBaseTheme 0x7f090000
+int style AppTheme 0x7f090001
 int[] styleable MapAttrs { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007, 0x7f010008, 0x7f010009, 0x7f01000a, 0x7f01000b, 0x7f01000c, 0x7f01000d }
 int styleable MapAttrs_cameraBearing 1
 int styleable MapAttrs_cameraTargetLat 2

@@ -1,9 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+    <item android:id="@+id/loc_ncku" android:title="National Cheng Kung University" android:titleCondensed="NCKU"></item>
+    <item android:id="@+id/loc_da_tung_market" android:title="Da-Tung Night Market" android:titleCondensed="Da-Tung"></item>
 
 </menu>
